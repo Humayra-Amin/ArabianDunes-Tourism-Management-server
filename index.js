@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -27,6 +27,17 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+    const tourismCollection = client.db('TourismDB').collection('tour');
+
+    
+
+    app.post('/tours', async (req, res) => {
+      const newSpot = req.body;
+      console.log(newSpot);
+      const result = await tourismCollection.insertOne(newSpot);
+      res.send(result);
+    })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -40,9 +51,9 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Tourism Server Started')
-  })
-  
-  app.listen(port, () => {
-    console.log(`Tourism server started on port: ${port}`)
-  })
+  res.send('Tourism Server Started')
+})
+
+app.listen(port, () => {
+  console.log(`Tourism server started on http://localhost: ${port}`)
+})
