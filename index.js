@@ -29,7 +29,18 @@ async function run() {
     await client.connect();
     const tourismCollection = client.db('TourismDB').collection('tour');
 
-    
+    app.get('/tours', async(req, res) => {
+      const cursor = tourismCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    app.get('/tours/:_id', async(req, res) => {
+      const _id = req.params._id;
+      const query = {_id: new ObjectId(_id)}
+      const result = await tourismCollection.findOne(query);
+      res.send(result);
+    })
 
     app.post('/tours', async (req, res) => {
       const newSpot = req.body;
