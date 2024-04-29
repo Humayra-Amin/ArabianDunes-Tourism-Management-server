@@ -28,6 +28,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const tourismCollection = client.db('TourismDB').collection('tour');
+    const userCollection = client.db('TourismDB').collection('user');
 
     app.get('/tours', async(req, res) => {
       const cursor = tourismCollection.find();
@@ -48,6 +49,15 @@ async function run() {
       const result = await tourismCollection.insertOne(newSpot);
       res.send(result);
     })
+
+    //user part
+    
+    app.post('/user', async (req, res) => {
+      const user = req.body;
+      console.log(user);
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
