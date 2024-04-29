@@ -28,17 +28,16 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const tourismCollection = client.db('TourismDB').collection('tour');
-    const userCollection = client.db('TourismDB').collection('user');
 
-    app.get('/tours', async(req, res) => {
+    app.get('/tours', async (req, res) => {
       const cursor = tourismCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     })
 
-    app.get('/tours/:_id', async(req, res) => {
+    app.get('/tours/:_id', async (req, res) => {
       const _id = req.params._id;
-      const query = {_id: new ObjectId(_id)}
+      const query = { _id: new ObjectId(_id) }
       const result = await tourismCollection.findOne(query);
       res.send(result);
     })
@@ -50,14 +49,28 @@ async function run() {
       res.send(result);
     })
 
-    //user part
-    
-    app.post('/user', async (req, res) => {
-      const user = req.body;
-      console.log(user);
-      const result = await userCollection.insertOne(user);
+    app.put('/tours/:_id', async (req, res) => {
+      const _id = req.params._id;
+      const filter = { _id: new ObjectId(_id) }
+      const options = { upsert: true };
+      const updatedSpot = req.body;
+      const tours = {
+        $set: {
+          tourists_spot_name: updatedSpot.tourists_spot_name,
+          average_cost: updatedSpot.average_cost,
+          seasonality: updatedSpot.seasonality,
+          travel_time: updatedSpot.travel_time,
+          totalVisitorsPerYear: updatedSpot.totalVisitorsPerYear,
+          image: updatedSpot.image,
+          name: updatedSpot.name,
+          email: updatedSpot.email,
+          short_description: updatedSpot.short_description,
+          country_Name: updatedSpot.country_Name
+        }
+      }
+      const result = await tourismCollection.updateOne(filter, tours, options);
       res.send(result);
-    });
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
