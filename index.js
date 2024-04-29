@@ -49,6 +49,14 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/myTour/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const cursor = tourismCollection.find(query);
+      const results = await cursor.toArray();
+      res.send(results);
+    });
+
     app.put('/tours/:_id', async (req, res) => {
       const _id = req.params._id;
       const filter = { _id: new ObjectId(_id) }
@@ -69,6 +77,13 @@ async function run() {
         }
       }
       const result = await tourismCollection.updateOne(filter, tours, options);
+      res.send(result);
+    })
+
+    app.delete('/tours/:_id', async (req, res) => {
+      const _id = req.params._id;
+      const query = { _id: new ObjectId(_id) }
+      const result = await tourismCollection.deleteOne(query);
       res.send(result);
     })
 
