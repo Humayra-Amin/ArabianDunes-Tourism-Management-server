@@ -5,8 +5,11 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
+
 //middleware
-app.use(cors());
+app.use(cors({
+  origin: ["https://tourism-a10-server-fmvukcray-humayra-amins-projects.vercel.app", "https://tourism-a10-client.web.app", "https://tourism-a10-client.firebaseapp.com", "http://localhost:5000", "http://localhost:5173", "https://tourism-a10-server.vercel.app"]
+}));
 app.use(express.json());
 
 //mongodb database
